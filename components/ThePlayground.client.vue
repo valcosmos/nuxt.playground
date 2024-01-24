@@ -6,11 +6,22 @@ const status = ref<Status>('init')
 const error = shallowRef<{ message: string }>()
 const stream = ref<ReadableStream>()
 async function startDevServer() {
+  const rawFiles = import.meta.glob(['../templates/basic/*.*', '!**/node_modules/**'], { as: 'raw', eager: true })
+
+  const files = Object.fromEntries(Object.entries(rawFiles).map(([path, content]) => {
+    // console.log(path, content)
+    return [path.replace('../templates/basic/', ''), {
+      file: {
+        contents: content,
+      },
+    }]
+  }))
+
   const wc = await useWebContainer()
   status.value = 'mount'
 
   wc.on('server-ready', (port, url) => {
-    console.log('server-ready', port, url)
+    // console.log('server-ready', port, url)
     status.value = 'ready'
     wcUrl.value = url
   })
@@ -20,26 +31,12 @@ async function startDevServer() {
     error.value = err
   })
 
-  wc.mount({
-    'package.json': {
-      file: {
-        contents: JSON.stringify({
-          private: true,
-          scripts: {
-            dev: 'nuxt dev',
-          },
-          dependencies: {
-            nuxt: 'latest',
-          },
-        }, null, 2),
-      },
-    },
-  })
+  wc.mount(files)
 
   status.value = 'install'
 
   const installProcess = await wc.spawn('pnpm', ['install'])
-  installProcess.output.pipeTo(stream)
+  // installProcess.output.pipeTo(stream)
   stream.value = installProcess.output
 
   const installExitCode = await installProcess.exit
@@ -69,13 +66,15 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div h-full w-full grid="~ rows-[2fr_1fr]">
-    <iframe v-show="status === 'ready'" ref="iframe" w-full h-full />
-    <div v-show="status !== 'ready'" w-full h-full flex="~ col items-center justify-center" capitalize text-lg>
-      <div class="i-svg-spinners-90-ring-with-bg" />
-      {{ status }}ing...
+  <div max-h-full w-full grid="~ rows-[2fr_1fr]" of-hidden relative>
+    <div h-full>
+      <iframe v-show="status === 'ready'" ref="iframe" w-full h-full />
+      <div v-if="status !== 'ready'" w-full h-full flex="~ col items-center justify-center" capitalize text-lg>
+        <div class="i-svg-spinners-90-ring-with-bg" />
+        {{ status }}ing...
+      </div>
     </div>
-    <TerminalOutput :stream="stream" />
+    <TerminalOutput :stream="stream" h="33%" />
   </div>
 </template>
 

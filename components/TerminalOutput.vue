@@ -16,9 +16,15 @@ const stream = new WritableStream({
   },
 })
 
-watch(() => props.stream, (s) => {
-  s?.pipeTo(stream)
-}, { immediate: true })
+watch(
+  () => props.stream,
+  (s) => {
+    s?.pipeTo(stream)
+  },
+  {
+    immediate: true,
+  },
+)
 onMounted(() => {
   terminal.open(root.value!)
 

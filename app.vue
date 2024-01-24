@@ -12,4 +12,8 @@ import '@unocss/reset/tailwind.css'
 .dark{
   color-scheme: dark;
 }
+html, body{
+  height: 100vh;
+  overflow: hidden;
+}
 </style>
