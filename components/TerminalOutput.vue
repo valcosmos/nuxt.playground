@@ -19,9 +19,21 @@ const stream = new WritableStream({
 watch(
   () => props.stream,
   (s) => {
-    s?.pipeTo(stream)
+    if (!s)
+      return
+    // s?.pipeTo(stream)
+    const reader = s.getReader()
+    function read() {
+      reader.read().then(({ done, value }) => {
+        terminal.write(value)
+        if (!done)
+          read()
+      })
+    }
+    read()
   },
   {
+    flush: 'sync',
     immediate: true,
   },
 )
