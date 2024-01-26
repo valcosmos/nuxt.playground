@@ -12,10 +12,10 @@
     "format": "eslint . --fix"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.6.2",
+    "@antfu/eslint-config": "^2.6.3",
     "@iconify-json/logos": "^1.1.42",
-    "@iconify/json": "^2.2.154",
-    "@nuxt/content": "^2.10.0",
+    "@iconify/json": "^2.2.174",
+    "@nuxt/content": "^2.11.0",
     "@nuxtjs/color-mode": "^3.3.2",
     "@unocss/nuxt": "^0.58.3",
     "@vueuse/nuxt": "^10.7.2",
