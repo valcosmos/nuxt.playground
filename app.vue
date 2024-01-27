@@ -15,5 +15,6 @@ import '@unocss/reset/tailwind.css'
 html, body{
   height: 100vh;
   overflow: hidden;
+  --uno: bg-base font-sans;
 }
 </style>

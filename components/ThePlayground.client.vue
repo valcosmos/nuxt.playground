@@ -55,6 +55,13 @@ async function startDevServer() {
   // devProcess.output.pipeTo(stream)
   stream.value = devProcess.output
   wc.on('server-ready', (port, url) => (iframe.value!.src = url))
+
+  // In dev, when doing HMR, we kill the previous process while reusing the same WebContainer
+  if (import.meta.hot) {
+    import.meta.hot.accept(() => {
+      devProcess.kill()
+    })
+  }
 }
 
 onMounted(startDevServer)
