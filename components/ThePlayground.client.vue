@@ -66,6 +66,13 @@ async function startDevServer() {
 
 onMounted(startDevServer)
 
+function sendMessage() {
+  if (!iframe.value)
+    return
+
+  iframe.value.contentWindow?.postMessage('hello', '*')
+}
+
 watchEffect(() => {
   if (iframe.value && wcUrl.value)
     iframe.value.src = wcUrl.value
@@ -74,6 +81,9 @@ watchEffect(() => {
 
 <template>
   <div max-h-full w-full grid="~ rows-[2fr_1fr]" of-hidden relative>
+    <button @click="sendMessage">
+      send
+    </button>
     <div h-full>
       <iframe v-show="status === 'ready'" ref="iframe" w-full h-full />
       <div v-if="status !== 'ready'" w-full h-full flex="~ col items-center justify-center" capitalize text-lg>

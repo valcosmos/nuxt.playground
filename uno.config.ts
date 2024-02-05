@@ -2,6 +2,7 @@ import {
   defineConfig,
   presetAttributify,
   presetIcons,
+  presetTypography,
   presetUno,
   presetWebFonts,
   transformerDirectives,
@@ -17,6 +18,7 @@ export default defineConfig({
     presetUno(),
     presetIcons(),
     presetAttributify(),
+    presetTypography(),
     presetWebFonts({
       provider: 'bunny',
       fonts: {
