@@ -1,17 +1,7 @@
 <script setup lang="ts">
-if (process.client) {
-  window.addEventListener('message', () => {
-    console.log('got message', e)
-  })
-}
+const msg = 'Hello World! This is the basic template.'
 </script>
 
 <template>
-  <div>
-    hello
-  </div>
+  <div>{{ msg }}</div>
 </template>
-
-<style scoped>
-
-</style>

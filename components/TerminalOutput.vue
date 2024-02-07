@@ -10,12 +10,6 @@ const root = ref<HTMLDivElement>()
 
 const terminal = new Terminal()
 
-// const stream = new WritableStream({
-//   write(chunk) {
-//     terminal.write(chunk)
-//   },
-// })
-
 watch(
   () => props.stream,
   (s) => {
@@ -39,8 +33,6 @@ watch(
 )
 onMounted(() => {
   terminal.open(root.value!)
-
-  // props.stream.pipeTo(stream)
 })
 </script>
 

@@ -1,22 +1,42 @@
 <script setup lang="ts">
-const { x, y } = useMouse()
-const color = useColorMode()
+const router = useRouter()
+const guide = useGuideStore()
 
-function toggleDark() {
-  color.value = color.value === 'dark' ? 'light' : 'dark'
+const templatesMap = Object.fromEntries(
+  Object.entries(import.meta.glob('~/content/**/.template/index.ts'))
+    .map(([key, loader]) => [
+      key
+        .replace(/^\/content/, '')
+        .replace(/\/\.template\/index\.ts$/, '')
+        .replace(/\/\d+\./g, '/'),
+      loader,
+    ]),
+)
+
+async function mount(path: string) {
+  path = path.replace(/\/$/, '') // remove trailing slash
+  await guide.mount(
+    await templatesMap[path]?.().then((m: any) => m.meta),
+    false,
+  )
 }
+
+router.afterEach(async (to) => {
+  mount(to.path)
+})
+
+onMounted(() => {
+  mount(router.currentRoute.value.path)
+})
 </script>
 
 <template>
-  <div class="grid grid-cols-[1fr_2fr] h-full of-hidden max-h-full">
-    <article border-r border-base p4 prose>
-      <ContentDoc />
-    </article>
-
-    <ThePlayground />
-  </div>
+  <main
+    h-100dvh h-screen w-screen of-hidden
+    grid="~ rows-[max-content_1fr]"
+  >
+    <TheNav />
+    <MainPlayground />
+    <CommandPalette />
+  </main>
 </template>
-
-<style scoped>
-
-</style>
